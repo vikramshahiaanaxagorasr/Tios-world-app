@@ -305,15 +305,16 @@ router.delete("/subcategory/delete/:id", async (req, res) =>
     }
 })
 
-router.post('/collection',upload.single('image'),async(req,res)=>{
-    const {userId,name,slug,products,regularDetails,organicSubCategoryDetails,status}=req.body
-    if(!userId || !name || !slug || !products || !regularDetails || !organicSubCategoryDetails || !status || !req.file){
+router.post('/collection', auth.isLoggedIn,auth.authRole,upload.single('image'),async(req,res)=>{
+    const {name,slug,products,regularDetails,organicSubCategoryDetails,status}=req.body
+    if( !name || !slug || !products || !regularDetails || !organicSubCategoryDetails || !status || !req.file){
         return res.status(400).json({message:"All fields are required",success:false})
     }
-    console.log(req.file)
+    // console.log(req.file)
+    // console.log(req.user)
     try{
     const collection=new collectionModel({
-        userId,
+        userId:req.user._id,
         name,
         slug,
         products,
@@ -331,16 +332,16 @@ router.post('/collection',upload.single('image'),async(req,res)=>{
 })
 
 //get All the collection
-router.get('/collection',async(req,res)=>{
+router.get('/collection',auth.isLoggedIn,auth.authRole,async(req,res)=>{
     try{
-const data=await collectionModel.find();
+const data=await collectionModel.find().sort({'createdAt':-1});
 res.status(200).json({message:"All collection retreived",success:true,data:data})
     }catch(err){
 res.status(400).json({message:"Something Went Wrong",success:false,err:err.message})
     }
 })
 
-router.delete('/collection/:id',async(req,res)=>{
+router.delete('/collection/:id',auth.isLoggedIn,auth.authRole,async(req,res)=>{
     try{
         const id=req.params.id;
         const data=await collectionModel.findById(id)
@@ -357,12 +358,12 @@ router.delete('/collection/:id',async(req,res)=>{
         }
 })
 
-router.put('/collection/:id',upload.single('image'),async(req,res)=>{
+router.put('/collection/:id',auth.isLoggedIn,auth.authRole,upload.single('image'),async(req,res)=>{
     try{
 const id=req.params.id;
-const {userId,name,slug,products,regularDetails,organicSubCategoryDetails,status}=req.body
+const {name,slug,products,regularDetails,organicSubCategoryDetails,status}=req.body
 const data={
-    userId,
+    userId:req.user._id,
     name,
     slug,
     products,
