@@ -75,3 +75,30 @@
 //    "banner_image": "subtestcategory2",
 //    "status": "true" 
 // }
+
+
+// {
+
+//     "category_name":"NewtestCategory" ,
+//    "subcategory_name": "subtestcategory2" ,
+//    "slug": "subtestcategory2",
+//    "url":"subtestcategory2" ,
+//    "short_description":"subtestcategory2",
+//    "description":"subtestcategory2" ,
+//    "image": "subtestcategory2",
+//    "banner_image": "subtestcategory2",
+//    "status": "true" 
+// }
+
+// "name": "Honey is best",
+// "slug": "Dabar is best",
+// "category": "subtestcategory2",
+// "url": "subtestcategory2iii",
+// "product_mrp":"100",
+// "price": "100",
+// "product_code": "100",
+// "short_description": "subtestcategory2",
+// "description": "subtestcategory2",
+// "image": "subtestcategory2",
+// "show_in": "true",
+// "status" :"true"
