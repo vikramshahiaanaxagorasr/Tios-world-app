@@ -6,7 +6,17 @@ var subProductlineModel = require("../models/Subcategory")
 var auth = require("../middlewares/auth")
 var Product = require("../models/Product");
 const { compareSync } = require('bcrypt');
+const collectionModel = require('../models/collection');
+const upload=require('../utils/multer')
+const fs=require('fs');
+const path = require('path');
 
+
+const fileHandler=(err,doc)=>{
+    if(err){
+        console.log('Unlink failed',err)
+    }
+}
 
 //get all the users by admin
 
@@ -295,6 +305,86 @@ router.delete("/subcategory/delete/:id", async (req, res) =>
     }
 })
 
+router.post('/collection',upload.single('image'),async(req,res)=>{
+    const {userId,name,slug,products,regularDetails,organicSubCategoryDetails,status}=req.body
+    if(!userId || !name || !slug || !products || !regularDetails || !organicSubCategoryDetails || !status || !req.file){
+        return res.status(400).json({message:"All fields are required",success:false})
+    }
+    console.log(req.file)
+    try{
+    const collection=new collectionModel({
+        userId,
+        name,
+        slug,
+        products,
+        regularDetails,
+        organicSubCategoryDetails,
+        status,
+        image:req.file.filename
+    })
+    const data=await collection.save();
+    res.status(201).json({message:"Collection created Successfully",success:true,data:data})
+}catch(err){
+    console.log(err)
+    res.status(201).json({message:"Something went wrong",success:false,err:err.message})
+}
+})
 
+//get All the collection
+router.get('/collection',async(req,res)=>{
+    try{
+const data=await collectionModel.find();
+res.status(200).json({message:"All collection retreived",success:true,data:data})
+    }catch(err){
+res.status(400).json({message:"Something Went Wrong",success:false,err:err.message})
+    }
+})
+
+router.delete('/collection/:id',async(req,res)=>{
+    try{
+        const id=req.params.id;
+        const data=await collectionModel.findById(id)
+        if(!data){
+         return res.status(200).json({message:"collection does not exist",success:false})
+        }
+        else{
+            fs.unlink(path.join(__dirname,'../uploads/'+data.image),fileHandler);
+            await data.remove();
+            res.status(200).json({message:"collection deleted Successfully",success:true,data:data})
+        }
+            }catch(err){
+            res.status(400).json({message:"Something Went Wrong",success:false,err:err.message})
+        }
+})
+
+router.put('/collection/:id',upload.single('image'),async(req,res)=>{
+    try{
+const id=req.params.id;
+const {userId,name,slug,products,regularDetails,organicSubCategoryDetails,status}=req.body
+const data={
+    userId,
+    name,
+    slug,
+    products,
+    regularDetails,
+    organicSubCategoryDetails,
+    status,
+    image:req.file.filename
+}
+const collection=await collectionModel.findById(id)
+if(collection){
+    fs.unlink(path.join(__dirname,'../uploads/'+collection.image),fileHandler);
+  const col=  await collectionModel.findByIdAndUpdate(id,data,{
+        new: true
+        })
+res.status(200).json({message:"collection updated Successfully",success:true,data:col})
+}
+else{
+    res.status(200).json({message:"collection does not exist",success:false})
+}
+    }catch(err){
+        res.status(400).json({message:"Something Went Wrong",success:false,err:err.message})
+    }
+})
 
 module.exports = router;
