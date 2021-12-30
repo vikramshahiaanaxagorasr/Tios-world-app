@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var userModel = require("../models/User");
 var ProductlineModel = require("../models/Category")
+var subProductlineModel = require("../models/Subcategory")
 var Product = require("../models/Product");
 const { NotExtended } = require('http-errors');
 const auth = require('../middlewares/auth');
@@ -23,7 +24,6 @@ router.post('/product/add', auth.isLoggedIn, async (req, res) =>
         req.body.createdBy = req.user.userID;
 
         let subcategory = await subProductlineModel.find({ subcategory_name: req.body.category });
-
         req.body.subcategory_id = subcategory[0]._id
 
         const product = await Product.create(req.body);
