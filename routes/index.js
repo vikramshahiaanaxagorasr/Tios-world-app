@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-let User = require("../models/User")
+let User = require("../models/User");
 
 /* GET home page. */
 router.get('/', function (req, res, next)
@@ -11,6 +11,7 @@ router.get('/', function (req, res, next)
 //registring new user
 router.post('/register', async (req, res, next) =>
 {
+
   let data = req.body;
   if (!data.username || !data.password || !data.email)
   {

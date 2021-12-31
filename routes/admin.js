@@ -222,6 +222,28 @@ router.post("/category/add", auth.isLoggedIn, async (req, res) =>
     }
 });
 
+
+//update category by id
+
+// router.put("/category/edit/:id", auth.isLoggedIn, async (req, res) =>
+// {
+//     // res.json({ id: req.params.id })
+//     try
+//     {
+//         const id = req.params.id;
+
+//         const category = await ProductlineModel.findByIdAndUpdate(id);
+
+//         res.json({ category, message: "category added successfully" })
+//     } catch (error)
+//     {
+//         res.status(400).json({ success: false, error });
+//     }
+// });
+
+
+
+
 //category deleted by id
 
 router.delete("/category/delete/:id", auth.isLoggedIn, async (req, res) =>
