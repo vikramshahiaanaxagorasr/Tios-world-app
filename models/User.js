@@ -107,13 +107,12 @@ userSchema.methods.createToken = async function (password)
     {
         let profileData = this;
         let payload = {
-            username: profileData.username,
-            userID: profileData.id,
-            userPassword: password
+            // username: profileData.username,
+            userID: profileData.id
+            // userPassword: password
         };
 
         let token = await jwt.sign(payload, process.env.TOKEN_KEY);
-
         return token;
     } catch (error)
     {

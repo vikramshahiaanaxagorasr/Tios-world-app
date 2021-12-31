@@ -9,7 +9,7 @@ var cors = require('cors');
 require('dotenv').config();
 
 mongoose.connect(
-  `${process.env.MONGODB_URL + process.env.DB_NAME}`,
+  `${process.env.MONGODB_URL}`,
   { useNewUrlParser: "true", useUnifiedTopology: "true" }, (err) =>
 {
   console.log(err ? err : "connected to database")
@@ -56,5 +56,17 @@ app.use(function (err, req, res, next)
   res.status(err.status || 500);
   res.render('error');
 });
+
+
+const port=process.env.PORT || 3000
+
+app.listen(port,(err)=>{
+  if(err){
+console.log(`error in server creation ${err}`)
+  }
+  else{
+console.log(`server is up and running ${port}`)
+  }
+})
 
 module.exports = app;
